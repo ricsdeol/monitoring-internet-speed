@@ -1,0 +1,15 @@
+# Simple network monitoring tool
+
+Inspired by: https://pimylifeup.com/raspberry-pi-internet-speed-monitor/
+
+run:
+```
+./setup.sh
+```
+
+GO to: http://127.0.0.1:8888/sources/0/dashboards
+
+Import NetworkMonitoring.json
+
+Image:
+![Dashboard](image.png)

@@ -1,0 +1,43 @@
+version: '3'
+services:
+
+  monitoring:
+      tty: true
+      stdin_open: true
+      image: networking_monitor
+      container_name: networking_monitor
+      volumes:
+        - .:/network_monitor:delegated
+      command: >
+        sh -c 'watch -n 900 python sppedtest.py'
+      depends_on:
+        - influxdb
+        - chronograf
+
+  influxdb:
+    image:  influxdb:latest
+    ports:
+      - '8086:8086'
+    volumes:
+      - influxdb-storage:/var/lib/influxdb
+    environment:
+      - INFLUXDB_DB=network_monitoring
+      - INFLUXDB_ADMIN_USER=admin
+      - INFLUXDB_ADMIN_PASSWORD=admin
+
+  chronograf:
+    image: chronograf:latest
+    ports:
+      - '127.0.0.1:8888:8888'
+    volumes:
+      - chronograf-storage:/var/lib/chronograf
+    depends_on:
+      - influxdb
+    environment:
+      - INFLUXDB_URL=http://influxdb:8086
+      - INFLUXDB_USERNAME=admin
+      - INFLUXDB_PASSWORD=admin
+
+volumes:
+  influxdb-storage:
+  chronograf-storage:
